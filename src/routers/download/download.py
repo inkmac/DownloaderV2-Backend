@@ -2,17 +2,24 @@ from fastapi import APIRouter
 from yt_dlp import YoutubeDL
 
 from settings import FFMPEG_DIR
-from src.routers.download.models import FetchVideoFormatReq, FetchVideoFormatRes, VideoFormatDetail, AudioFormatDetail
+from src.routers.download.models import FetchVideoFormatReq, FetchVideoFormatRes, VideoFormatDetail, AudioFormatDetail, \
+    DownloadVideoReq, DownloadVideoRes
 from src.utils.cookiefile import check_cookie_file_valid
 from src.utils.site import get_site_config
 
 router = APIRouter(prefix="")
 
 @router.post("/download-video")
-async def download_video(url: str, fmt: str):
+async def download_video(req: DownloadVideoReq):
+    url = req.url
+    fmt_id = req.formatId
+
     config = get_site_config(url)
     if config is None:
-        return '当前网址不支持！'
+        return DownloadVideoRes(
+            status="error",
+            message="[ERROR] 当前网址不支持"
+        )
 
     cookiefile = config['cookiefile']
     outtmpl = config['outtmpl']
@@ -23,7 +30,7 @@ async def download_video(url: str, fmt: str):
 
     if is_valid:
         ydl_opts = {
-            'format': fmt,
+            'format': fmt_id,
             'cookiefile': str(cookiefile),
             'outtmpl': str(outtmpl),
             "sleep_interval": 3,
@@ -31,7 +38,7 @@ async def download_video(url: str, fmt: str):
         }
     else:
         ydl_opts = {
-            'format': fmt,
+            'format': fmt_id,
             'outtmpl': str(outtmpl),
             "sleep_interval": 3,
             "ffmpeg_location": str(FFMPEG_DIR),
@@ -39,7 +46,11 @@ async def download_video(url: str, fmt: str):
 
     with YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
-    return "[Success] Download Complete"
+
+    return DownloadVideoRes(
+        status="success",
+        message="[SUCCESS] Successfully downloaded"
+    )
 
 
 def format_size(size_bytes):

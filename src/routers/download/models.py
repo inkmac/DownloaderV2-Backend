@@ -1,4 +1,16 @@
+from typing import Literal
+
 from pydantic import BaseModel
+
+
+class DownloadVideoReq(BaseModel):
+    url: str
+    formatId: str
+
+
+class DownloadVideoRes(BaseModel):
+    status: Literal["success", "error"]
+    message: str
 
 
 class FetchVideoFormatReq(BaseModel):
@@ -26,7 +38,7 @@ class AudioFormatDetail(BaseModel):
 
 
 class FetchVideoFormatRes(BaseModel):
-    status: str
+    status: Literal["success", "error"]
     videoFormats: list[VideoFormatDetail]
     audioFormats: list[AudioFormatDetail]
     message: str

@@ -43,3 +43,8 @@ class FetchVideoFormatRes(BaseModel):
     audioFormats: list[AudioFormatDetail]
     message: str
 
+
+class GetSupportedWebsiteRes(BaseModel):
+    status: Literal["success", "error"]
+    websites: list[str]
+    message: str

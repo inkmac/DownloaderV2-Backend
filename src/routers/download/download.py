@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 from yt_dlp import YoutubeDL
 
-from settings import FFMPEG_DIR
-from src.routers.download.models import FetchVideoFormatReq, FetchVideoFormatRes, VideoFormatDetail, AudioFormatDetail, \
-    DownloadVideoReq, DownloadVideoRes
+from settings import FFMPEG_DIR, SITE_CONFIGS
+from src.routers.download.models import (FetchVideoFormatReq, FetchVideoFormatRes, VideoFormatDetail, AudioFormatDetail,
+    DownloadVideoReq, DownloadVideoRes, GetSupportedWebsiteRes)
 from src.utils.cookiefile import check_cookie_file_valid
 from src.utils.site import get_site_config
 
@@ -146,3 +146,13 @@ async def get_available_formats(req: FetchVideoFormatReq):
         message="可用格式已更新，可以在『视频格式』下拉框中选择想要下载的格式 ID"
     )
 
+
+@router.get("/get-supported-websites")
+async def get_supported_sites():
+    supported_websites = [config['label'] for config in SITE_CONFIGS.values()]
+
+    return GetSupportedWebsiteRes(
+        status="success",
+        websites=supported_websites,
+        message="[Success] Get supported websites"
+    )

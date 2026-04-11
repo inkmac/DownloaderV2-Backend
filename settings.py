@@ -29,7 +29,7 @@ SITE_CONFIGS = {
         'outtmpl': VIDEOS_DIR / 'bilibili' / '%(title)s.%(ext)s',
     },
     'youtube.com': {
-        'label': 'YouTube',
+        'label': 'youtube',
         'cookiefile': COOKIES_DIR / 'youtube.com_cookies.txt',
         'outtmpl': VIDEOS_DIR / 'youtube' / '%(title)s.%(ext)s',
     }

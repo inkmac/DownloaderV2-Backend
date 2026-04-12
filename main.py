@@ -64,7 +64,19 @@ class MainWindow(QMainWindow):
 
 
 def run_fastapi(port: int):
-    uvicorn.run(fastapi_app, host="127.0.0.1", port=port)
+    import sys
+    import os
+    sys.stdout = open(os.devnull, "w")
+    sys.stderr = open(os.devnull, "w")
+
+    uvicorn.run(
+        fastapi_app,
+        host="127.0.0.1",
+        port=port,
+        log_config=None,
+        access_log=False,
+        use_colors=False,
+    )
 
 
 def main():

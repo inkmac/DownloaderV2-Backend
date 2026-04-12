@@ -53,7 +53,7 @@ def main():
 
     for _ in range(100):
         if is_api_ready(port):
-            time.sleep(0.5)
+            time.sleep(0.1)
             break
         time.sleep(0.1)
 

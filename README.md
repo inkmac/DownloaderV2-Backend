@@ -1,8 +1,16 @@
-### required python package for project
+### Required Python Package for Project
 
 ```bash
 pip install pyside6 fastapi browser_cookie3 yt-dlp uvicorn pyinstaller
 ```
+
+
+### Required Assets for Project
+- static/
+  - index.html      # main frontend page
+- assets/
+  - ffmpeg/         # ffmpeg binary for media processing
+    - ffmpeg.exe
 
 
 ### Compile for Production by Pyinstaller

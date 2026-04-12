@@ -20,7 +20,7 @@ def is_api_ready(port: int):
             conn.close()
 
 
-def find_available_port() -> int:
+def get_available_port() -> int:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(('127.0.0.1', 0))
         port = s.getsockname()[1]

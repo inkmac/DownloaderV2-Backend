@@ -3,7 +3,7 @@ from multiprocessing import Process, freeze_support
 
 import uvicorn
 from PySide6.QtCore import QUrl
-from PySide6.QtWebEngineCore import QWebEngineSettings
+from PySide6.QtWebEngineCore import QWebEngineSettings, QWebEngineScript
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QApplication
 from PySide6.QtWidgets import QMainWindow
@@ -13,7 +13,7 @@ from starlette.middleware.cors import CORSMiddleware
 from settings import WEBPAGE_PATH
 from src.routers.cookie import cookie
 from src.routers.download import download
-from src.utils.port import is_api_ready
+from src.utils.port import is_api_ready, get_available_port
 
 fastapi_app = FastAPI(title="Downloader API")
 
@@ -31,13 +31,36 @@ fastapi_app.include_router(cookie.router)
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, port: int):
         super().__init__()
-        self.browser = QWebEngineView()
+        self.view = QWebEngineView()
+        self.setup_backend_port(port)
+
+        settings = self.view.settings()
+        settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessFileUrls, True)
 
         # 加载页面
-        self.browser.setUrl(QUrl.fromLocalFile(WEBPAGE_PATH))
-        self.setCentralWidget(self.browser)
+        self.view.setUrl(QUrl.fromLocalFile(WEBPAGE_PATH))
+        self.setCentralWidget(self.view)
+
+
+    def setup_backend_port(self, port: int):
+        # 1. 定义注入的 JS 代码
+        js_code = f"window.BACKEND_PORT = {port};"
+
+        # 2. 创建脚本对象
+        script = QWebEngineScript()
+        script.setName("InjectedConfig")
+        script.setSourceCode(js_code)
+
+        # 3. 关键设置：在文档创建后、其他脚本执行前注入
+        script.setInjectionPoint(QWebEngineScript.InjectionPoint.DocumentCreation)
+        script.setWorldId(QWebEngineScript.ScriptWorldId.MainWorld)
+        script.setRunsOnSubFrames(True)
+
+        # 4. 将脚本添加到页面的配置文件中
+        self.view.page().profile().scripts().insert(script)
 
 
 def run_fastapi(port: int):
@@ -47,7 +70,7 @@ def run_fastapi(port: int):
 def main():
     freeze_support()
 
-    port = 56000
+    port = get_available_port()
     fastapi_process = Process(target=run_fastapi, args=(port,), daemon=True)
     fastapi_process.start()
 
@@ -58,10 +81,7 @@ def main():
         time.sleep(0.1)
 
     pyside_app = QApplication([])
-    window = MainWindow()
-    settings = window.browser.settings()
-    settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
-    settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessFileUrls, True)
+    window = MainWindow(port)
     window.showMaximized()
     pyside_app.exec()
 

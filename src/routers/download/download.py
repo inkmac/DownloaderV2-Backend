@@ -50,7 +50,10 @@ async def download_video(req: DownloadVideoReq):
 
     return DownloadVideoRes(
         status="success",
-        message="[SUCCESS] Successfully downloaded"
+        message=(
+            "[SUCCESS] Successfully downloaded\n"
+            f"[SUCCESS] Saved to : {str(outtmpl.parent)}\n"
+        )
     )
 
 

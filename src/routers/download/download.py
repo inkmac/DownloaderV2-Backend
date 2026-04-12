@@ -6,6 +6,7 @@ from src.routers.download.models import (FetchVideoFormatReq, FetchVideoFormatRe
     DownloadVideoReq, DownloadVideoRes, GetSupportedWebsiteRes)
 from src.utils.cookiefile import check_cookie_file_valid
 from src.utils.site import get_site_config
+from src.utils.ydl_types import YdlOpts
 
 router = APIRouter(prefix="")
 
@@ -29,7 +30,7 @@ async def download_video(req: DownloadVideoReq):
     is_valid, msg = check_cookie_file_valid(cookiefile)
 
     if is_valid:
-        ydl_opts = {
+        ydl_opts: YdlOpts = {
             'format': fmt_id,
             'cookiefile': str(cookiefile),
             'outtmpl': str(outtmpl),
@@ -37,7 +38,7 @@ async def download_video(req: DownloadVideoReq):
             "ffmpeg_location": str(FFMPEG_DIR),
         }
     else:
-        ydl_opts = {
+        ydl_opts: YdlOpts = {
             'format': fmt_id,
             'outtmpl': str(outtmpl),
             "sleep_interval": 3,
@@ -75,12 +76,12 @@ async def get_available_formats(req: FetchVideoFormatReq):
     is_valid, msg = check_cookie_file_valid(cookiefile)
 
     if is_valid:
-        ydl_opts = {
+        ydl_opts: YdlOpts = {
             "sleep_interval": 3,
             'cookiefile': str(cookiefile),
         }
     else:
-        ydl_opts = {
+        ydl_opts: YdlOpts = {
             "sleep_interval": 3,
         }
 

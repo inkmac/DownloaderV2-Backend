@@ -1,5 +1,5 @@
 import time
-from multiprocessing import Process, freeze_support
+from threading import Thread
 
 import uvicorn
 from PySide6.QtCore import QUrl
@@ -80,11 +80,9 @@ def run_fastapi(port: int):
 
 
 def main():
-    freeze_support()
-
     port = get_available_port()
-    fastapi_process = Process(target=run_fastapi, args=(port,), daemon=True)
-    fastapi_process.start()
+    fastapi_thread = Thread(target=run_fastapi, args=(port,), daemon=True)
+    fastapi_thread.start()
 
     for _ in range(100):
         if is_api_ready(port):

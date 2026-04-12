@@ -1,5 +1,5 @@
 import time
-from multiprocessing import Process
+from multiprocessing import Process, freeze_support
 
 import uvicorn
 from PySide6.QtCore import QUrl
@@ -17,6 +17,7 @@ from src.utils.port import is_api_ready
 
 fastapi_app = FastAPI(title="Downloader API")
 
+# noinspection PyTypeChecker
 fastapi_app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # 允许所有来源（开发环境）
@@ -44,13 +45,15 @@ def run_fastapi(port: int):
 
 
 def main():
+    freeze_support()
+
     port = 56000
-    fastapi_process = Process(target=run_fastapi, args=(port,))
+    fastapi_process = Process(target=run_fastapi, args=(port,), daemon=True)
     fastapi_process.start()
 
     for _ in range(100):
         if is_api_ready(port):
-            time.sleep(2)
+            time.sleep(0.5)
             break
         time.sleep(0.1)
 

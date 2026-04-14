@@ -10,8 +10,8 @@ from src.utils.ydl_types import YdlOpts
 
 router = APIRouter(prefix="")
 
-@router.post("/download-video")
-async def download_video(req: DownloadVideoReq):
+@router.post("/download-video", response_model=DownloadVideoRes)
+async def download_video(req: DownloadVideoReq) -> DownloadVideoRes:
     url = req.url
     fmt_id = req.formatId
 
@@ -19,7 +19,7 @@ async def download_video(req: DownloadVideoReq):
     if config is None:
         return DownloadVideoRes(
             status="error",
-            message="[ERROR] 当前网址不支持"
+            message="[ERROR] 当前网址不支持\n"
         )
 
     cookiefile = config['cookiefile']
@@ -67,12 +67,17 @@ def format_size(size_bytes):
         size_bytes /= 1024.0
     return f"{size_bytes:.1f}TB"
 
-@router.post("/get-available-formats")
-async def get_available_formats(req: FetchVideoFormatReq):
+@router.post("/get-available-formats", response_model=FetchVideoFormatRes)
+async def get_available_formats(req: FetchVideoFormatReq) -> FetchVideoFormatRes:
     url = req.url
     config = get_site_config(url)
     if config is None:
-        return '当前网址不支持！'
+        return FetchVideoFormatRes(
+            status="error",
+            videoFormats=[],
+            audioFormats=[],
+            message="[ERROR] 当前网址不支持！\n"
+        )
 
     cookiefile = config['cookiefile']
 
@@ -94,10 +99,12 @@ async def get_available_formats(req: FetchVideoFormatReq):
 
     formats = info.get('formats', [])
     if not formats:
-        return {
-            "status": "error",
-            "message": "未能获取到可用格式信息"
-        }
+        return FetchVideoFormatRes(
+            status="error",
+            videoFormats=[],
+            audioFormats=[],
+            message="[ERROR] 未能获取到可用格式信息\n"
+        )
 
     video_formats: list[VideoFormatDetail] = []
     audio_formats: list[AudioFormatDetail] = []
@@ -147,16 +154,16 @@ async def get_available_formats(req: FetchVideoFormatReq):
         status="success",
         videoFormats=video_formats,
         audioFormats=audio_formats,
-        message="可用格式已更新，可以在『视频格式』下拉框中选择想要下载的格式 ID"
+        message="[SUCCESS] 可用格式已更新，可以在『视频格式』下拉框中选择想要下载的格式 ID\n"
     )
 
 
-@router.get("/get-supported-websites")
-async def get_supported_sites():
+@router.get("/get-supported-websites", response_model=GetSupportedWebsiteRes)
+async def get_supported_sites() -> GetSupportedWebsiteRes:
     supported_websites = [config['label'] for config in SITE_CONFIGS.values()]
 
     return GetSupportedWebsiteRes(
         status="success",
         websites=supported_websites,
-        message="[Success] Get supported websites"
+        message="[Success] Get supported websites\n"
     )

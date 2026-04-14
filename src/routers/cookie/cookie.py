@@ -1,15 +1,15 @@
 from http.cookiejar import MozillaCookieJar
 
 import browser_cookie3
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from settings import COOKIES_DIR
 from src.routers.cookie.models import FetchCookieReq, FetchCookieRes
 
 router = APIRouter(prefix="")
 
-@router.post("/fetch-cookie")
-async def fetch_cookie(req: FetchCookieReq):
+@router.post("/fetch-cookie", response_model=FetchCookieRes)
+async def fetch_cookie(req: FetchCookieReq)-> FetchCookieRes:
     website = req.website
     browser = req.browser
 
@@ -41,9 +41,13 @@ async def fetch_cookie(req: FetchCookieReq):
         return FetchCookieRes(
             status="error",
             savePath=str(cookie_path),
-            message=f"[Success] Cookie 已成功保存至\n {str(cookie_path)}\n 请不要移动或修改"
+            message=f"[Success] Cookie 已成功保存至\n {str(cookie_path)}\n 请不要移动或修改\n"
         )
 
     except Exception as e:
         print(f"error: {e}")
-        raise HTTPException(status_code=500, detail=f"获取失败: {str(e)}")
+        return FetchCookieRes(
+            status="error",
+            savePath="",
+            message=f"[ERROR] {e}\n"
+        )

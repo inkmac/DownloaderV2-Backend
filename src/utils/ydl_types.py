@@ -36,3 +36,4 @@ class YdlOpts(TypedDict, total=False):
     quiet: bool
     no_warnings: bool
     ignoreerrors: bool
+    no_color: bool

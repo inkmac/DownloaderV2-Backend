@@ -32,7 +32,8 @@ def handle_download_video(url: str, fmt_id: str, outputs: list[str]) -> Download
             'outtmpl': str(outtmpl),
             "sleep_interval": 3,
             "ffmpeg_location": str(FFMPEG_DIR),
-            "logger": YdlLogger(outputs)
+            "logger": YdlLogger(outputs),
+            'no_color': True,
         }
     else:
         ydl_opts: YdlOpts = {
@@ -40,7 +41,8 @@ def handle_download_video(url: str, fmt_id: str, outputs: list[str]) -> Download
             'outtmpl': str(outtmpl),
             "sleep_interval": 3,
             "ffmpeg_location": str(FFMPEG_DIR),
-            "logger": YdlLogger(outputs)
+            "logger": YdlLogger(outputs),
+            'no_color': True,
         }
 
     with YoutubeDL(ydl_opts) as ydl:

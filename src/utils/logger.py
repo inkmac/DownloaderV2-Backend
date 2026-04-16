@@ -6,10 +6,13 @@ class YdlLogger(YdlLoggerProtocol):
         self.buffer = buffer
 
     def debug(self, msg):
-        self.buffer.append(msg)
+        print(msg)
+        self.buffer.append(f'{msg}\n')
 
     def warning(self, msg):
-        self.buffer.append(f'[Warning] {msg}')
+        print(msg)
+        self.buffer.append(f'[Warning] {msg}\n')
 
     def error(self, msg):
-        self.buffer.append(f'[Error] {msg}')
+        print(msg)
+        self.buffer.append(f'[Error] {msg}\n')

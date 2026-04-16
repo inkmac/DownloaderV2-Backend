@@ -13,6 +13,12 @@ class DownloadVideoRes(BaseModel):
     message: str
 
 
+class GetDownloadOutputsRes(BaseModel):
+    status: Literal["success", "error"]
+    outputs: list[str]
+    message: str
+
+
 class FetchVideoFormatReq(BaseModel):
     url: str
 

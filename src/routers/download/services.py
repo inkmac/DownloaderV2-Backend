@@ -2,13 +2,14 @@ from yt_dlp import YoutubeDL
 
 from settings import FFMPEG_DIR, SITE_CONFIGS
 from src.routers.download.models import AudioFormatDetail, VideoFormatDetail, FetchVideoFormatRes, DownloadVideoRes, \
-    GetSupportedWebsiteRes
+    GetSupportedWebsiteRes, GetDownloadOutputsRes
 from src.utils.cookiefile import check_cookie_file_valid
+from src.utils.logger import YdlLogger
 from src.utils.site import get_site_config, is_url_supported
 from src.utils.ydl_types import YdlOpts
 
 
-def handle_download_video(url: str, fmt_id: str) -> DownloadVideoRes:
+def handle_download_video(url: str, fmt_id: str, outputs: list[str]) -> DownloadVideoRes:
     if not is_url_supported(url):
         return DownloadVideoRes(
             status="error",
@@ -31,6 +32,7 @@ def handle_download_video(url: str, fmt_id: str) -> DownloadVideoRes:
             'outtmpl': str(outtmpl),
             "sleep_interval": 3,
             "ffmpeg_location": str(FFMPEG_DIR),
+            "logger": YdlLogger(outputs)
         }
     else:
         ydl_opts: YdlOpts = {
@@ -38,6 +40,7 @@ def handle_download_video(url: str, fmt_id: str) -> DownloadVideoRes:
             'outtmpl': str(outtmpl),
             "sleep_interval": 3,
             "ffmpeg_location": str(FFMPEG_DIR),
+            "logger": YdlLogger(outputs)
         }
 
     with YoutubeDL(ydl_opts) as ydl:
@@ -49,6 +52,16 @@ def handle_download_video(url: str, fmt_id: str) -> DownloadVideoRes:
             "[SUCCESS] Successfully downloaded\n"
             f"[SUCCESS] Saved to : {str(outtmpl.parent)}\n"
         )
+    )
+
+
+def handle_get_download_outputs(download_outputs: list[str]) -> GetDownloadOutputsRes:
+    current_outputs = download_outputs.copy()
+    download_outputs.clear()
+    return GetDownloadOutputsRes(
+        status="success",
+        outputs=current_outputs,
+        message="[SUCCESS] Successfully get download outputs\n"
     )
 
 

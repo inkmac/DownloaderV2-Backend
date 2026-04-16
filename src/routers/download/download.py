@@ -1,22 +1,38 @@
 from fastapi import APIRouter
 
 from src.routers.download.models import (FetchVideoFormatReq, FetchVideoFormatRes, DownloadVideoReq, DownloadVideoRes,
-                                         GetSupportedWebsiteRes)
-from src.routers.download.services import handle_download_video, handle_get_available_formats, \
-    handle_get_supported_sites
+                                         GetSupportedWebsiteRes, GetDownloadOutputsRes)
+from src.routers.download.services import (handle_download_video, handle_get_available_formats,
+                                           handle_get_supported_sites, handle_get_download_outputs)
 
 router = APIRouter(prefix="")
+
+download_outputs: list[str] = []
 
 @router.post("/download-video", response_model=DownloadVideoRes)
 def download_video(req: DownloadVideoReq) -> DownloadVideoRes:
     url = req.url
     fmt_id = req.formatId
 
+    download_outputs.clear()
+
     try:
-        return handle_download_video(url, fmt_id)
+        return handle_download_video(url, fmt_id, download_outputs)
     except Exception as e:
         return DownloadVideoRes(
             status="error",
+            message=f"[ERROR] Unexpected error: {e}",
+        )
+
+
+@router.get("/get-download-outputs", response_model=GetDownloadOutputsRes)
+async def get_download_outputs() -> GetDownloadOutputsRes:
+    try:
+        return handle_get_download_outputs(download_outputs)
+    except Exception as e:
+        return GetDownloadOutputsRes(
+            status="error",
+            outputs=[],
             message=f"[ERROR] Unexpected error: {e}",
         )
 

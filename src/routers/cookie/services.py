@@ -12,17 +12,21 @@ def handle_fetch_cookie(website: str, browser: str) -> FetchCookieRes:
     cookie_path.parent.mkdir(parents=True, exist_ok=True)
     cookie_path.touch(exist_ok=True)
 
-    match browser.lower():
-        case "chrome":
-            cj = browser_cookie3.chrome(domain_name=website)
-        case "edge":
-            cj = browser_cookie3.edge(domain_name=website)
-        case "firefox":
-            cj = browser_cookie3.firefox(domain_name=website)
-        case "safari":
-            cj = browser_cookie3.safari(domain_name=website)
-        case _:
-            raise ValueError(f"Unsupported browser: {browser}")
+    browser_name = browser.lower()
+    if browser_name == "chrome":
+        cj = browser_cookie3.chrome(domain_name=website)
+    elif browser_name == "edge":
+        cj = browser_cookie3.edge(domain_name=website)
+    elif browser_name == "firefox":
+        cj = browser_cookie3.firefox(domain_name=website)
+    elif browser_name == "safari":
+        cj = browser_cookie3.safari(domain_name=website)
+    else:
+        return FetchCookieRes(
+            status="error",
+            savePath='',
+            message=f"Unsupported browser: {browser}"
+        )
 
     mcj = MozillaCookieJar(cookie_path)
 

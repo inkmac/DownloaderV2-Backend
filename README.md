@@ -1,10 +1,3 @@
-### Required Python Package for Project
-
-```bash
-pip install pyside6 fastapi browser_cookie3 yt-dlp uvicorn pyinstaller
-```
-
-
 ### Required Assets for Project
 - static/
   - index.html      # main frontend page
@@ -13,14 +6,21 @@ pip install pyside6 fastapi browser_cookie3 yt-dlp uvicorn pyinstaller
     - ffmpeg.exe
 
 
+### Cython Compile
+
+```bash
+python setup.py build_ext --inplace
+```
+
+
 ### Compile for Production by Pyinstaller
 
 Windows:
 ```bash
-pyinstaller -w -F -n downloader --add-data "assets;assets" --add-data "static;static" main.py
+pyinstaller -w -n downloader --add-data "assets;assets" --add-data "static;static" main.py
 ```
 
 macOS:
 ```bash
-pyinstaller -w -F -n downloader --add-data "assets:assets" --add-data "static:static" main.py
+pyinstaller -w -n downloader --add-data "assets:assets" --add-data "static:static" main.py
 ```

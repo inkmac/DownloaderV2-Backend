@@ -1,6 +1,7 @@
 build/
 dist/
 *.spec
+*.so
 
 test/
 __pycache__/
@@ -8,11 +9,7 @@ venv/
 .venv/
 
 .idea/
-
-
-*.mp4
-*.mkv
-*.webm
+.vscode/
 
 data/
 assets/

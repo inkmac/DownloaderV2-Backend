@@ -8,8 +8,14 @@
 
 ### Cython Compile
 
+compile .py files
 ```bash
 python setup.py build_ext --inplace
+```
+
+clean .so / .pyd files
+```bash
+python setup.py clear_files
 ```
 
 

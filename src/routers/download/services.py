@@ -50,9 +50,10 @@ def handle_download_video(url: str, fmt_id: str, outputs: list[str]) -> Download
 
     return DownloadVideoRes(
         status="success",
+        savedPath=str(outtmpl.parent),
         message=(
             "[SUCCESS] Successfully downloaded\n"
-            f"[SUCCESS] Saved to : {str(outtmpl.parent)}\n"
+            f"[SUCCESS] Saved to: {str(outtmpl.parent)}\n"
         )
     )
 

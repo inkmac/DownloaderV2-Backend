@@ -10,6 +10,7 @@ class DownloadVideoReq(BaseModel):
 
 class DownloadVideoRes(BaseModel):
     status: Literal["success", "error"]
+    savedPath: str
     message: str
 
 

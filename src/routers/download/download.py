@@ -21,6 +21,7 @@ def download_video(req: DownloadVideoReq) -> DownloadVideoRes:
     except Exception as e:
         return DownloadVideoRes(
             status="error",
+            savedPath="",
             message=f"[ERROR] Unexpected error: {e}",
         )
 

@@ -3,10 +3,10 @@ from typing import Literal
 from pydantic import BaseModel
 
 
-class OpenSystemReq(BaseModel):
-    target: str
+class OpenUriReq(BaseModel):
+    uri: str
 
 
-class OpenSystemRes(BaseModel):
+class OpenUriRes(BaseModel):
     status: Literal["success", "error"]
     message: str

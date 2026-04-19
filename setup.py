@@ -26,6 +26,7 @@ target_files = make_extensions([
     'src/core/*.py',
     'src/routers/cookie/services.py',
     'src/routers/download/services.py',
+    'src/routers/system/services.py',
 ])
 
 setup(

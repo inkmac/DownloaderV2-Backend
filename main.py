@@ -13,6 +13,7 @@ from starlette.middleware.cors import CORSMiddleware
 from settings import WEBPAGE_PATH
 from src.routers.cookie import cookie
 from src.routers.download import download
+from src.routers.system import system
 from src.utils.port import is_api_ready, get_available_port
 
 fastapi_app = FastAPI(title="Downloader API")
@@ -28,6 +29,7 @@ fastapi_app.add_middleware(
 
 fastapi_app.include_router(download.router)
 fastapi_app.include_router(cookie.router)
+fastapi_app.include_router(system.router)
 
 
 class MainWindow(QMainWindow):

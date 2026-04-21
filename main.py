@@ -2,7 +2,7 @@ import time
 from threading import Thread
 
 import uvicorn
-from PySide6.QtCore import QUrl
+from PySide6.QtCore import QUrl, Qt
 from PySide6.QtWebEngineCore import QWebEngineSettings, QWebEngineScript
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QApplication
@@ -36,6 +36,7 @@ class MainWindow(QMainWindow):
     def __init__(self, port: int):
         super().__init__()
         self.view = QWebEngineView()
+        self.view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         self.setup_backend_port(port)
 
         settings = self.view.settings()

@@ -1,6 +1,7 @@
 from yt_dlp import YoutubeDL
 
-from settings import FFMPEG_DIR, SITE_CONFIGS
+from settings import FFMPEG_DIR
+from src.core.config import AppConfig
 from src.routers.download.models import AudioFormatDetail, VideoFormatDetail, FetchVideoFormatRes, DownloadVideoRes, \
     GetSupportedWebsiteRes, GetDownloadOutputsRes
 from src.utils.cookiefile import check_cookie_file_valid
@@ -13,6 +14,7 @@ def handle_download_video(url: str, fmt_id: str, outputs: list[str]) -> Download
     if not is_url_supported(url):
         return DownloadVideoRes(
             status="error",
+            savedPath="",
             message="[ERROR] 当前网址不支持\n"
         )
 
@@ -171,7 +173,8 @@ def handle_get_available_formats(url: str) -> FetchVideoFormatRes:
 
 
 def handle_get_supported_sites() -> GetSupportedWebsiteRes:
-    supported_websites = [config['label'] for config in SITE_CONFIGS.values()]
+    site_configs = AppConfig.get_site_configs()
+    supported_websites = [config['label'] for config in site_configs.values()]
 
     return GetSupportedWebsiteRes(
         status="success",

@@ -2,12 +2,13 @@ from http.cookiejar import MozillaCookieJar
 
 import browser_cookie3
 
-from settings import COOKIES_DIR
+from src.core.config import AppConfig
 from src.routers.cookie.models import FetchCookieRes
 
 
 def handle_fetch_cookie(website: str, browser: str) -> FetchCookieRes:
-    cookie_path = COOKIES_DIR / f'{website}_cookies.txt'
+    cookies_dir = AppConfig.get_cookies_dir()
+    cookie_path = cookies_dir / f'{website}_cookies.txt'
 
     cookie_path.parent.mkdir(parents=True, exist_ok=True)
     cookie_path.touch(exist_ok=True)

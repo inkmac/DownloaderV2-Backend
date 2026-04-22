@@ -1,5 +1,4 @@
 import os
-import shutil
 from pathlib import Path
 
 from Cython.Build import cythonize
@@ -11,6 +10,7 @@ target_files = [
     'src/routers/cookie/services.py',
     'src/routers/download/services.py',
     'src/routers/system/services.py',
+    'src/routers/config/services.py',
 ]
 
 def make_extensions(path_patterns: list[str]):

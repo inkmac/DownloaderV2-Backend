@@ -11,6 +11,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from settings import WEBPAGE_PATH
+from src.routers.config import config
 from src.routers.cookie import cookie
 from src.routers.download import download
 from src.routers.system import system
@@ -30,6 +31,7 @@ fastapi_app.add_middleware(
 fastapi_app.include_router(download.router)
 fastapi_app.include_router(cookie.router)
 fastapi_app.include_router(system.router)
+fastapi_app.include_router(config.router)
 
 
 class MainWindow(QMainWindow):

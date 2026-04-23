@@ -1,4 +1,5 @@
 import time
+from multiprocessing import freeze_support
 from threading import Thread
 
 import uvicorn
@@ -85,6 +86,8 @@ def run_fastapi(port: int):
 
 
 def main():
+    freeze_support()
+
     port = get_available_port()
     fastapi_thread = Thread(target=run_fastapi, args=(port,), daemon=True)
     fastapi_thread.start()

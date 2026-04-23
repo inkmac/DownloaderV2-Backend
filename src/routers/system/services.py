@@ -2,6 +2,9 @@ import os
 import subprocess
 import sys
 import webbrowser
+import tkinter as tk
+from multiprocessing import Queue, Process
+from tkinter import filedialog
 
 from src.routers.system.models import OpenUriRes, ChoosePathRes, OpenPathRes
 
@@ -34,42 +37,30 @@ def handle_open_path(path: str) -> OpenPathRes:
     return OpenPathRes(status="success", message="文件夹已打开")
 
 
+def _askdirectory(queue: Queue):
+    root = tk.Tk()
+    root.withdraw()
+    root.attributes("-topmost", True)
+    root.focus_force()
+    path = filedialog.askdirectory(title="选择视频文件夹")
+    root.destroy()
+    queue.put(path)
+
+def _get_askdirectory() -> str:
+    q = Queue()
+    p = Process(target=_askdirectory, args=(q,))
+    p.start()
+    p.join()
+
+    path = q.get() if not q.empty() else ""
+
+    q.close()
+    q.join_thread()
+    p.close()
+    return path
+
 def handle_choose_path() -> ChoosePathRes:
-    # macOS
-    if sys.platform == "darwin":
-        res = subprocess.run(
-            [
-                "osascript",
-                "-e",
-                'POSIX path of (choose folder with prompt "选择视频文件夹")'
-            ],
-            capture_output=True,
-            text=True,
-        )
-        path = res.stdout.strip()
-
-    # Windows
-    elif sys.platform == "win32":
-        res = subprocess.run(
-            [
-                "powershell",
-                "-Command",
-                ("$app = New-Object -ComObject Shell.Application; "
-                 "$folder = $app.BrowseForFolder(0, '选择文件夹', 0, 0); "
-                 "if ($folder) { $folder.Self.Path }")
-            ],
-            capture_output=True,
-            text=True,
-            creationflags=0x08000000
-        )
-        path = res.stdout.strip()
-
-    else:
-        return ChoosePathRes(
-            status="error",
-            path="",
-            message="Platform not supported"
-        )
+    path = _get_askdirectory()
 
     if path:
         return ChoosePathRes(

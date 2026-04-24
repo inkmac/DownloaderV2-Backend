@@ -1,6 +1,6 @@
-from typing import Literal
-
 from pydantic import BaseModel
+
+from src.routers.base import BaseResponse
 
 
 class DownloadVideoReq(BaseModel):
@@ -8,16 +8,12 @@ class DownloadVideoReq(BaseModel):
     formatId: str
 
 
-class DownloadVideoRes(BaseModel):
-    status: Literal["success", "error"]
+class DownloadVideoRes(BaseResponse):
     savedPath: str
-    message: str
 
 
-class GetDownloadOutputsRes(BaseModel):
-    status: Literal["success", "error"]
+class GetDownloadOutputsRes(BaseResponse):
     outputs: list[str]
-    message: str
 
 
 class FetchVideoFormatReq(BaseModel):
@@ -44,14 +40,10 @@ class AudioFormatDetail(BaseModel):
     acodec: str = ""  # mp4a.40.2
 
 
-class FetchVideoFormatRes(BaseModel):
-    status: Literal["success", "error"]
+class FetchVideoFormatRes(BaseResponse):
     videoFormats: list[VideoFormatDetail]
     audioFormats: list[AudioFormatDetail]
-    message: str
 
 
-class GetSupportedWebsiteRes(BaseModel):
-    status: Literal["success", "error"]
+class GetSupportedWebsiteRes(BaseResponse):
     websites: list[str]
-    message: str

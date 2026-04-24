@@ -1,27 +1,23 @@
-from typing import Literal
-
 from pydantic import BaseModel
+
+from src.routers.base import BaseResponse
 
 
 class OpenUriReq(BaseModel):
     uri: str
 
 
-class OpenUriRes(BaseModel):
-    status: Literal["success", "error"]
-    message: str
+class OpenUriRes(BaseResponse):
+    pass
 
 
 class OpenPathReq(BaseModel):
     path: str
 
 
-class OpenPathRes(BaseModel):
-    status: Literal["success", "error"]
-    message: str
+class OpenPathRes(BaseResponse):
+    pass
 
 
-class ChoosePathRes(BaseModel):
-    status: Literal["success", "error"]
+class ChoosePathRes(BaseResponse):
     path: str
-    message: str

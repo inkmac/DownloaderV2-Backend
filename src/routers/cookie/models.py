@@ -1,6 +1,6 @@
-from typing import Literal
-
 from pydantic import BaseModel
+
+from src.routers.base import BaseResponse
 
 
 class FetchCookieReq(BaseModel):
@@ -8,7 +8,5 @@ class FetchCookieReq(BaseModel):
     browser: str
 
 
-class FetchCookieRes(BaseModel):
-    status: Literal["success", "error"]
+class FetchCookieRes(BaseResponse):
     savePath: str
-    message: str

@@ -1,6 +1,6 @@
-from typing import Literal
-
 from pydantic import BaseModel
+
+from src.routers.base import BaseResponse
 
 
 class GeneralConfig(BaseModel):
@@ -8,10 +8,8 @@ class GeneralConfig(BaseModel):
     cookieSavedPath: str
 
 
-class GetGeneralConfigRes(BaseModel):
-    status: Literal["success", "error"]
+class GetGeneralConfigRes(BaseResponse):
     config: GeneralConfig | None
-    message: str
 
 
 class UpdateGeneralConfigReq(BaseModel):

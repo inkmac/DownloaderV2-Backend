@@ -18,7 +18,12 @@ from src.routers.download import download
 from src.routers.system import system
 from src.utils.port import is_api_ready, get_available_port
 
-fastapi_app = FastAPI(title="Downloader API")
+fastapi_app = FastAPI(
+    title="Downloader API",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
 
 # noinspection PyTypeChecker
 fastapi_app.add_middleware(
